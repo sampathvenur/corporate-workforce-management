@@ -1,0 +1,81 @@
+<!-- Add.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee - Corporate Workforce Management</title>
+    <link rel="stylesheet" href="Add.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Add New Employee Details</h2>
+
+        <!-- Employee Table -->
+        <div class="form-card" id="employee-card">
+            <h3>Employee</h3>
+            <form id="employee-form">
+                <label for="emp-id">Employee ID:</label>
+                <input type="number" id="emp-id" required>
+
+                <label for="emp-name">Employee Name:</label>
+                <input type="text" id="emp-name" required>
+
+                <label for="emp-gender">Gender:</label>
+                <select id="emp-gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="emp-dob">Date of Birth:</label>
+                <input type="date" id="emp-dob" required>
+
+                <label for="emp-department">Department:</label>
+                <select id="emp-department" required>
+                    <!-- Department options will be populated dynamically -->
+                </select>
+
+                <button type="submit">Add Employee</button>
+            </form>
+        </div>
+
+        <!-- Salary Table -->
+        <div class="form-card" id="salary-card">
+            <h3>Employee Salary</h3>
+            <form id="salary-form">
+                <label for="salary-amount">Salary Amount:</label>
+                <input type="number" id="salary-amount" required>
+
+                <label for="payment-date">Payment Date:</label>
+                <input type="date" id="payment-date" required>
+
+                <label for="salary-emp-id">Employee ID:</label>
+                <input type="number" id="salary-emp-id" required>
+
+                <button type="submit">Add Salary</button>
+            </form>
+        </div>
+
+        <!-- Project Table -->
+        <div class="form-card" id="project-card">
+            <h3>Employee Project</h3>
+            <form id="project-form">
+                <label for="project-id">Project ID:</label>
+                <input type="number" id="project-id" required>
+
+                <label for="project-name">Project Name:</label>
+                <input type="text" id="project-name" required>
+
+                <label for="emp-project-id">Employee ID:</label>
+                <input type="number" id="emp-project-id" required>
+
+                <button type="submit">Add Project</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="Add.js"></script>
+</body>
+</html>
