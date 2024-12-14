@@ -1,121 +1,118 @@
-// Add.js
+const tableSelect = document.getElementById('tableSelect');
+const form = document.getElementById('addForm');
 
-document.addEventListener('DOMContentLoaded', function () {
-    const employeeForm = document.getElementById('employee-form');
-    const salaryForm = document.getElementById('salary-form');
-    const projectForm = document.getElementById('project-form');
+tableSelect.addEventListener('change', () => {
+    const selectedTable = tableSelect.value;
+    form.innerHTML = ''; // Clear existing form fields
 
-    // Handle Employee Form Submission
-    employeeForm.addEventListener('submit', function (event) {
-        event.preventDefault();
+    // Define field definitions for each table
+    const fieldDefinitions = {
+        employee: [
+            { label: 'EID', type: 'number', required: true },
+            { label: 'Name', type: 'text', required: true },
+            { label: 'Address', type: 'text' },
+            { label: 'Gender', type: 'select', options: ['M', 'F'] },
+            { label: 'Salary', type: 'number' },
+            { label: 'Super EID', type: 'number' },
+            { label: 'DNO', type: 'number' }
+        ],
+        department: [
+            { label: 'DNUM', type: 'number', required: true },
+            { label: 'DNAME', type: 'text', required: true },
+            { label: 'DMGR_ID', type: 'number' },
+            { label: 'MGR_START_DATE', type: 'date' }
+        ],
+        dlocation: [
+            { label: 'DNO', type: 'number', required: true },
+            { label: 'LOCATION', type: 'text', required: true }
+        ],
+        project: [
+            { label: 'PNUM', type: 'number', required: true },
+            { label: 'PNAME', type: 'text', required: true },
+            { label: 'PLOCATION', type: 'text' },
+            { label: 'DNO', type: 'number' }
+        ],
+        workson: [
+            { label: 'EID', type: 'number', required: true },
+            { label: 'PNO', type: 'number', required: true },
+            { label: 'HOURS', type: 'number' }
+        ],
+        dependent: [
+            { label: 'EMP_ID', type: 'number', required: true },
+            { label: 'DEPENDENT_NAME', type: 'text', required: true },
+            { label: 'GENDER', type: 'text' },
+            { label: 'BDATE', type: 'date' },
+            { label: 'RELATIONSHIP', type: 'text' }
+        ]
+    };
 
-        const empId = document.getElementById('emp-id').value;
-        const empName = document.getElementById('emp-name').value;
-        const empGender = document.getElementById('emp-gender').value;
-        const empDob = document.getElementById('emp-dob').value;
-        const empDepartment = document.getElementById('emp-department').value;
+    // Generate form fields based on the selected table
+    const fields = fieldDefinitions[selectedTable];
+    fields.forEach(field => {
+        const label = document.createElement('label');
+        label.htmlFor = field.label;
+        label.textContent = `${field.label}: `;
 
-        const employeeData = {
-            emp_id: empId,
-            emp_name: empName,
-            emp_gender: empGender,
-            emp_dob: empDob,
-            emp_department: empDepartment
-        };
+        const input = document.createElement('input');
+        input.type = field.type;
+        input.id = field.label;
+        input.name = field.label;
+        if (field.required) {
+            input.required = true;
+        }
 
-        fetch('/addEmployee', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(employeeData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to add employee');
-        });
-    });
-
-    // Handle Salary Form Submission
-    salaryForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const salaryAmount = document.getElementById('salary-amount').value;
-        const paymentDate = document.getElementById('payment-date').value;
-        const salaryEmpId = document.getElementById('salary-emp-id').value;
-
-        const salaryData = {
-            salary_amount: salaryAmount,
-            payment_date: paymentDate,
-            emp_id: salaryEmpId
-        };
-
-        fetch('/addSalary', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(salaryData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to add salary');
-        });
-    });
-
-    // Handle Project Form Submission
-    projectForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const projectId = document.getElementById('project-id').value;
-        const projectName = document.getElementById('project-name').value;
-        const empProjectId = document.getElementById('emp-project-id').value;
-
-        const projectData = {
-            project_id: projectId,
-            project_name: projectName,
-            emp_id: empProjectId
-        };
-
-        fetch('/addProject', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(projectData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to add project');
-        });
-    });
-
-    // Populate Department Dropdown Dynamically
-    fetch('/getDepartments')
-        .then(response => response.json())
-        .then(data => {
-            const departmentSelect = document.getElementById('emp-department');
-            data.forEach(department => {
-                const option = document.createElement('option');
-                option.value = department.department_id;
-                option.textContent = department.department_name;
-                departmentSelect.appendChild(option);
+        if (field.type === 'select') {
+            const select = document.createElement('select');
+            field.options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                select.appendChild(optionElement);
             });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to load departments');
+            input.appendChild(select);
+        }
+
+        form.appendChild(label);
+        form.appendChild(input);
+        form.appendChild(document.createElement('br'));
+    });
+
+    form.appendChild(document.createElement('br'));
+    form.appendChild(document.createElement('button'));
+    form.lastChild.type = 'submit';
+    form.lastChild.textContent = 'Submit';
+});
+
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    const data = {};
+
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    try {
+        const response = await fetch('/addData', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: tableSelect.value,
+                data: data
+            })
         });
+
+        if (response.ok) {
+            alert('Data added successfully!');
+            // Optionally redirect to a success page
+        } else {
+            alert('Error adding data');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred');
+    }
 });

@@ -1,28 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Query - Corporate Workforce Management</title>
-    <link rel="stylesheet" href="Custom.css">
+    <title>Custom Query</title>
+    <link rel="stylesheet" href="custom.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Custom SQL Query</h1>
-        <p>Enter your SQL query below (excluding DROP queries):</p>
+    <h1>Custom Query</h1>
+    <textarea id="queryInput" rows="5" placeholder="Enter your SQL query here"></textarea>
+    <button id="executeQueryButton">Execute Query</button>
 
-        <!-- Query input area -->
-        <textarea id="query-input" rows="6" cols="60" placeholder="Enter your SQL query here..."></textarea>
-        <br>
-        <button id="execute-query-btn">Execute Query</button>
+    <table id="queryResultTable"></table>
 
-        <!-- Result display area -->
-        <div id="query-result">
-            <h2>Query Results</h2>
-            <div id="query-result-table"></div>
-        </div>
-    </div>
-
-    <script src="Custom.js"></script>
+    <script src="custom.js"></script>
 </body>
 </html>

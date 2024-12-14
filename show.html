@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add to Table</title>
-    <link rel="stylesheet" href="add.css">
+    <title>Show Table</title>
+    <link rel="stylesheet" href="show.css">
 </head>
 <body>
-    <h1>Add to Table</h1>
-
+    <h1>Show Table</h1>
     <select id="tableSelect">
         <option value="employee">Employee</option>
         <option value="department">Department</option>
@@ -15,9 +14,10 @@
         <option value="workson">Workson</option>
         <option value="dependent">Dependent</option>
     </select>
+    <button id="showTableButton">Show</button>
 
-    <form id="addForm"></form>
+    <table id="dataTable"></table>
 
-    <script src="add.js"></script>
+    <script src="show.js"></script>
 </body>
 </html>
