@@ -1,9 +1,10 @@
+<!-- show.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Show Table</title>
     <style>
-* {
+        * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -115,8 +116,7 @@ td:hover {
         max-width: none;
     }
 }
-
-    </style>>
+    </style>
 </head>
 <body>
     <h1>Show Table</h1>
@@ -132,6 +132,47 @@ td:hover {
 
     <table id="dataTable"></table>
 
-    <script src="show.js"></script>
+    <script>
+        // show.js
+const tableSelect = document.getElementById('tableSelect');
+const showTableButton = document.getElementById('showTableButton');
+const dataTable = document.getElementById('dataTable');
+
+showTableButton.addEventListener('click', async () => {
+    const tableName = tableSelect.value;
+
+    try {
+        const response = await fetch(`/getTableData?table=${tableName}`);
+        const data = await response.json();
+
+        // Create table dynamically
+        dataTable.innerHTML = ''; // Clear previous table
+
+        const table = document.createElement('table');
+        const headerRow = table.insertRow();
+
+        // Create header row
+        for (const key in data[0]) {
+            const th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        }
+
+        // Create data rows
+        data.forEach(row => {
+            const rowElement = table.insertRow();
+            for (const key in row) {
+                const cell = rowElement.insertCell();
+                cell.textContent = row[key];
+            }
+        });
+
+        dataTable.appendChild(table);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error fetching data');
+    }
+});
+    </script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+-- db.sql
 -- EMPLOYEE Table
 Create schema corporate_workforce_management;
 CREATE TABLE EMPLOYEE(

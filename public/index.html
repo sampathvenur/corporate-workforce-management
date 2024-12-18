@@ -1,0 +1,48 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Management</title>
+    <style>
+        body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+    <h1>Database Management</h1>
+    <button id="addButton">Add to Table</button>
+    <button id="showTableButton">Show Table</button>
+    <button id="customQueryButton">Custom Query</button>
+
+    <script>
+        // index.js
+const addButton = document.getElementById('addButton');
+const showTableButton = document.getElementById('showTableButton');
+const customQueryButton = document.getElementById('customQueryButton');
+
+addButton.addEventListener('click', () => {
+    window.location.href = 'add.html';
+});
+
+showTableButton.addEventListener('click', () => {
+    window.location.href = 'show.html';
+});
+
+customQueryButton.addEventListener('click', () => {
+    window.location.href = 'custom.html';
+});
+    </script>
+</body>
+</html>

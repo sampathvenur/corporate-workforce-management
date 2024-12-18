@@ -1,11 +1,12 @@
+// server.js
 const express = require('express');
 const mysql = require('mysql2');
 
 const app = express();
 const port = 3000;
 
-// Serve static files from the current directory
-app.use(express.static(__dirname)); 
+// Serve static files from the public directory
+app.use(express.static(__dirname + '/public'));
 
 // Connect to MySQL
 const pool = mysql.createPool({
