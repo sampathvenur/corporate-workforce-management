@@ -272,15 +272,21 @@ form.addEventListener('submit', async (event) => {
         });
 
         if (response.ok) {
-            alert('Data added successfully!');
-            // Optionally redirect to a success page
-        } else {
-            alert('Error adding data');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred');
+      alert('Data added successfully!');
+    } else {
+      const errorMessage = await response.text(); 
+      if (response.status === 400 && errorMessage.includes('Invalid DNO')) { 
+        alert('Invalid department. Please select a valid department.'); 
+      } else if (response.status === 400 && response.json().sqlState === '42000') { 
+        alert('SQL Syntax Error: ' + response.json().sqlMessage); 
+      } else {
+        alert('Error adding data: ' + errorMessage); 
+      }
     }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred');
+  }
 });
     </script>
 </body>
