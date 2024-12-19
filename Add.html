@@ -100,7 +100,7 @@ select:focus {
 }
 
 /* New Submit Button Styling */
-#submitButton {
+button[type="submit"] {
     width: 100%;
     padding: 15px;
     background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
@@ -117,16 +117,16 @@ select:focus {
     opacity: 1;
 }
 
-#submitButton:hover {
+button:hover[type="submit"] {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-#submitButton:active {
+button:active[type="submit"] {
     transform: translateY(1px);
 }
 
-#submitButton.hidden {
+submitButton.hidden[type="submit"] {
     opacity: 0;
     visibility: hidden;
     height: 0;
@@ -164,7 +164,7 @@ select:focus {
     <form id="addForm"></form>
 
     <script>
-        const tableSelect = document.getElementById('tableSelect');
+const tableSelect = document.getElementById('tableSelect');
 const form = document.getElementById('addForm');
 
 tableSelect.addEventListener('change', () => {

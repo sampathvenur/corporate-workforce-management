@@ -9,13 +9,23 @@ body {
 }
 
 button {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
+    padding: 12px 20px;
+    font-size: 16px;
     color: white;
+    background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    transform: translateY(1px);
 }
     </style>
 </head>
