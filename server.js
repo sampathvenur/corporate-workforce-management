@@ -61,6 +61,10 @@ app.get('/getTableData', (req, res) => {
 app.post('/executeQuery', (req, res) => {
     const query = req.body.query;
 
+    if (/drop/i.test(query)) {
+        return res.status(400).send('Warning: DROP queries are not allowed.');
+    }
+    
     pool.query(query, (err, results) => {
         if (err) {
             console.error(err);
