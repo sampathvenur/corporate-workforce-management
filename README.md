@@ -137,6 +137,173 @@ cd corporate-workforce-management
 
 ---
 
+## How to Configure MySQL and Docker for This Project
+
+If you're using Docker and running MySQL in a container, follow these steps to configure the database and ensure everything works smoothly:
+
+### Step 1: Verify the User Exists
+
+1. Log in to MySQL from the host system:
+
+   ```bash
+   mysql -u root -p
+   ```
+
+2. Check if the user exists and has the correct host specified:
+
+   ```sql
+   SELECT Host, User FROM mysql.user WHERE User = 'username';
+   ```
+
+   Look for an entry like `'username'@'host.docker.internal'`. If it doesn't exist, you'll need to create or update the user.
+
+---
+
+### Step 2: Create or Update the User
+
+1. If the user `'username'@'host.docker.internal'` does not exist, create it:
+
+   ```sql
+   CREATE USER 'username'@'host.docker.internal' IDENTIFIED BY 'password';
+   ```
+
+2. If the user exists but from a different host, update the host:
+
+   ```sql
+   UPDATE mysql.user SET Host = 'host.docker.internal' WHERE User = 'username';
+   ```
+
+---
+
+### Step 3: Grant Permissions
+
+1. Grant the necessary privileges to the user:
+
+   ```sql
+   GRANT ALL PRIVILEGES ON *.* TO 'username'@'host.docker.internal';
+   FLUSH PRIVILEGES;
+   ```
+
+---
+
+### Step 4: Test the Connection
+
+1. Retry connecting from the command line:
+
+   ```bash
+   mysql -u username -p -h host.docker.internal -P 3306
+   ```
+
+---
+
+### Step 5: If Issues Persist (Alternative Wildcard Host)
+
+1. If MySQL still doesn't recognize `host.docker.internal`, use `%` to allow access from any host:
+
+   ```sql
+   CREATE USER 'username'@'%' IDENTIFIED BY 'password';
+   GRANT ALL PRIVILEGES ON *.* TO 'username'@'%';
+   FLUSH PRIVILEGES;
+   ```
+
+   This grants access to the user from any host, which is fine for development but not secure for production.
+
+---
+
+### Step 6: Restart MySQL
+
+1. After making changes, restart the MySQL service to ensure all configurations are applied:
+
+   - On Linux:
+     ```bash
+     sudo systemctl restart mysql
+     ```
+   - On Windows: Restart the MySQL service through the Services Manager.
+
+---
+To run the Docker image locally as a container, you can add a section to the README that explains how to build and run the Docker image. Here's how you can structure it:
+
+---
+
+## Running the Project in a Docker Container
+
+To run this project locally in a Docker container, follow these steps:
+
+### Step 1: Install Docker
+
+Ensure Docker is installed on your machine. You can download Docker from the official website:
+
+- [Docker for Windows](https://www.docker.com/products/docker-desktop)
+- [Docker for macOS](https://www.docker.com/products/docker-desktop)
+- [Docker for Linux](https://docs.docker.com/get-docker/)
+
+### Step 2: Build the Docker Image
+
+1. Navigate to the project directory where your `Dockerfile` is located.
+
+2. Build the Docker image using the following command:
+
+   ```bash
+   docker build -t corporate-workforce-management .
+   ```
+
+   This will create a Docker image named `corporate-workforce-management`.
+
+### Step 3: Run the Docker Container
+
+1. After building the image, you can run it as a container with the following command:
+
+   ```bash
+   docker run -d -p 3000:3000 --name corporate-workforce-management-container corporate-workforce-management
+   ```
+
+   - `-d` runs the container in detached mode.
+   - `-p 3000:3000` maps port 3000 of the container to port 3000 on your host machine.
+   - `--name corporate-workforce-management-container` gives the container a specific name.
+   - `corporate-workforce-management` is the name of the image to run.
+
+2. Once the container is running, the application should be accessible in your browser at:
+
+   ```
+   http://localhost:3000
+   ```
+
+---
+
+### Step 4: Connect to MySQL Inside the Container
+
+If MySQL is running inside the container and you need to interact with it, use the following command to enter the MySQL CLI within the container:
+
+1. Find the container ID of the MySQL container:
+
+   ```bash
+   docker ps
+   ```
+
+2. Use the container ID to execute commands inside the MySQL container:
+
+   ```bash
+   docker exec -it <container_id> mysql -u root -p
+   ```
+
+---
+
+### Step 5: Stopping the Docker Container
+
+To stop the running container, use the following command:
+
+```bash
+docker stop corporate-workforce-management-container
+```
+
+If you want to remove the container after stopping it:
+
+```bash
+docker rm corporate-workforce-management-container
+```
+
+---
+
 ## Contribution Guidelines
 
 We welcome contributions! Follow these steps:
