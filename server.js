@@ -9,11 +9,12 @@ app.use(express.static(__dirname));
 
 // Connect to MySQL
 const pool = mysql.createPool({
-    host: 'localhost',
+    // Prioritize using the Docker host if available, otherwise fall back to localhost
+    host: process.env.MYSQL_HOST || 'host.docker.internal' || 'localhost', 
     user: 'root',
     password: 'root96',
     database: 'corporate_workforce_management'
-});
+  });
 
 // Middleware to parse JSON requests
 app.use(express.json());
