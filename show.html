@@ -162,7 +162,13 @@ showTableButton.addEventListener('click', async () => {
             const rowElement = table.insertRow();
             for (const key in row) {
                 const cell = rowElement.insertCell();
-                cell.textContent = row[key];
+                // Format date for MGR_START_DATE column in department table
+                if (tableName === 'department' && key === 'MGR_START_DATE' && row[key]) {
+                    const date = new Date(row[key]);
+                    cell.textContent = date.toLocaleDateString('en-GB'); // DD/MM/YYYY format
+                } else {
+                    cell.textContent = row[key];
+                }
             }
         });
 
