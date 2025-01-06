@@ -22,22 +22,25 @@ app.use(express.urlencoded({ extended: true }));
 
 // Handle add data request
 app.post('/addData', (req, res) => {
-    const table = req.body.table; 
-    const data = req.body.data; 
+    const table = req.body.table;
+    const data = req.body.data;
 
-    // Construct SQL INSERT query dynamically
-    let sql = `INSERT INTO ${table} SET `;
-    const values = [];
-    for (const key in data) {
-        sql += `${key} = ?, `;
-        values.push(data[key]);
+    // Validate table name against whitelist
+    const validTables = ['employee', 'department', 'dlocation', 'project', 'workson', 'dependent'];
+    if (!validTables.includes(table.toLowerCase())) {
+        return res.status(400).send('Invalid table name');
     }
-    sql = sql.slice(0, -2); // Remove trailing comma
+
+    // Construct SQL INSERT query using prepared statements
+    const columns = Object.keys(data);
+    const placeholders = columns.map(() => '?').join(', ');
+    const sql = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`;
+    const values = Object.values(data);
 
     pool.query(sql, values, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Error adding data: ' + err.message); 
+            res.status(500).send('Error adding data'); // Don't send error details to client
         } else {
             res.send('Data added successfully');
         }
@@ -48,10 +51,17 @@ app.post('/addData', (req, res) => {
 app.get('/getTableData', (req, res) => {
     const tableName = req.query.table;
 
-    pool.query(`SELECT * FROM ${tableName}`, (err, results) => {
+    // Validate table name against whitelist
+    const validTables = ['employee', 'department', 'dlocation', 'project', 'workson', 'dependent'];
+    if (!validTables.includes(tableName.toLowerCase())) {
+        return res.status(400).send('Invalid table name');
+    }
+
+    // Use prepared statement even for simple queries
+    pool.query('SELECT * FROM ??', [tableName], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Error fetching data: ' + err.message); 
+            res.status(500).send('Error fetching data'); // Don't send error details to client
         } else {
             res.json(results);
         }
@@ -62,14 +72,35 @@ app.get('/getTableData', (req, res) => {
 app.post('/executeQuery', (req, res) => {
     const query = req.body.query;
 
-    if (/drop/i.test(query)) {
-        return res.status(400).send('Warning: DROP queries are not allowed.');
+    // Basic security checks
+    const forbiddenKeywords = [
+        'drop',
+        'truncate',
+        'delete',
+        'alter',
+        'create',
+        'insert',
+        'update',
+        'grant',
+        'revoke'
+    ];
+
+    // Check for forbidden keywords
+    if (forbiddenKeywords.some(keyword => 
+        new RegExp(`\\b${keyword}\\b`, 'i').test(query))) {
+        return res.status(400).send('Query contains forbidden operations');
     }
-    
+
+    // Limit to SELECT queries only
+    if (!query.trim().toLowerCase().startsWith('select')) {
+        return res.status(400).send('Only SELECT queries are allowed');
+    }
+
+    // Use query with parameters if possible
     pool.query(query, (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Error executing query: ' + err.message); 
+            res.status(500).send('Error executing query'); // Don't send error details to client
         } else {
             res.json(results);
         }
